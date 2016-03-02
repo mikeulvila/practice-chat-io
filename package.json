@@ -1,0 +1,24 @@
+{
+  "name": "practice-chat-io",
+  "version": "1.0.0",
+  "description": "practicing using web sockets in a simple chat room.",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeulvila/practice-chat-io.git"
+  },
+  "author": "Mike Ulvila <mikeulvila@me.com> (https://github.com/mikeulvila)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikeulvila/practice-chat-io/issues"
+  },
+  "homepage": "https://github.com/mikeulvila/practice-chat-io#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "socket.io": "^1.4.5"
+  }
+}
