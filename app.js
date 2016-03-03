@@ -1,29 +1,22 @@
 'use strict';
 
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const PORT = process.env.PORT || 3000;
+const express = require('express'),
+      app = express(),
+      server = require('http').createServer(app),
+      io = require('socket.io').listen(server);
 
-app.get('/', (req, res) => {
+server.listen(process.env.PORT || 3000);
+
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
-  console.log('a user connected');
+io.sockets.on('connection', function(socket){
 
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
+  // Send Message
+  socket.on('send message', function(data){
+    io.sockets.emit('new message',{msg: data});
   });
 
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg);
-    io.emit('chat message', msg);
-  });
 
-});
-
-http.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
 });

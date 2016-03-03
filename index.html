@@ -1,35 +1,106 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>ChatIO</title>
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      body{
+        background:#f9f9f9;
+      }
+
+      #container{
+        width:700px;
+        margin:0 auto;
+      }
+
+      #chatWindow{
+        height:300px;
+      }
+
+      #mainWrapper{
+        display:none;
+      }
+
+      #chatWrapper{
+        float:left;
+        border:1px #ccc solid;
+        border-radius: 10px;
+        background:#f4f4f4;
+        padding:10px;
+      }
+
+      #userWrapper{
+        float:left;
+        border:1px #ccc solid;
+        border-radius: 10px;
+        background:#f4f4f4;
+        padding:10px;
+        margin-left:20px;
+        width:150px;
+        max-height:200px;
+      }
+
+      #namesWrapper{
+        float:left;
+        border:1px #ccc solid;
+        border-radius: 10px;
+        background:#f4f4f4;
+        padding:10px;
+        margin-left:20px;
+
+      }
+
+      input{
+        height:30px;
+      }
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="container">
+      <div id="namesWrapper">
+        <h2>ChatIO</h2>
+        <p>Create Username:</p>
+        <div id="error"></div>
+        <form id="usernameForm">
+          <input size="35" id="username">
+          <input type="submit" value="Submit">
+        </form>
+      </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+      <div id="mainWrapper">
+        <h2>ChatIO</h2>
+        <div id="chatWrapper">
+          <div id="chatWindow"></div>
+          <form id="messageForm">
+            <input size="35" id="message" placeholder="Type Something...">
+            <input type="submit" value="Say It!">
+          </form>
+        </div>
+
+        <div id="userWrapper">
+          <div id="users"></div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+      $(function(){
+        var socket = io.connect();
+        var $messageForm = $('#messageForm');
+        var $message = $('#message');
+        var $chat = $('#chatWindow');
+
+
+        $messageForm.submit(function(e){
+          e.preventDefault();
+          socket.emit('send message', $message.val());
+          $message.val('');
+        });
+
+        socket.on('new message', function(data){
+          $chat.append('<strong>'+data.msg+'<br>');
+        });
       });
     </script>
   </body>
